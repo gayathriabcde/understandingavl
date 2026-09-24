@@ -50,16 +50,18 @@ class Tree {
         if (getBF(root) == -2) { // right heavy -> RR, RL
             int bf=getBF(root.right);
             if (bf == 1) { // RL
-
+                root.right=rightRotate(root.right);
+                root=leftRotate(root);
             } else if (bf == -1) { //RR
                 root=leftRotate(root);
             }
         } else if (getBF(root) == 2) { // left heavy -> LL, LR
             int bf=getBF(root.left);
-            if (bf == 1) { //LL
-
+            if (bf == 1) { //LL 
+                root=rightRotate(root);
             } else if (bf == -1) { //LR
-
+                root.left=leftRotate(root.left);
+                root=rightRotate(root);
             }
         }
 
@@ -68,12 +70,25 @@ class Tree {
 
     public TreeNode leftRotate (TreeNode root) {
         TreeNode newRoot=root.right;
-        TreeNode t1 = root.left, t2=root.right.left;
+        TreeNode t2=root.right.left;
 
         root.right=t2;
         updateHeight(root);
 
         newRoot.left=root;
+        updateHeight(newRoot);
+
+        return newRoot;
+    }
+
+    public TreeNode rightRotate (TreeNode root) {
+        TreeNode newRoot = root.left;
+        TreeNode t2=root.left.right;
+
+        root.left=t2;
+        updateHeight(root);
+
+        newRoot.right=root;
         updateHeight(newRoot);
 
         return newRoot;
@@ -100,7 +115,7 @@ class Tree {
     }
 
     void printTreeLikeATree() {
-        TreePrinter<TreeNode> tp=new TreePrinter<>(n-> ""+n.data+" : "+n.h, n->n.left, n->n.right);
+        TreePrinter<TreeNode> tp=new TreePrinter<>(n-> ""+n.data, n->n.left, n->n.right);
         tp.printTree(root);
     }
 
